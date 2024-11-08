@@ -35,8 +35,8 @@ from livekit.agents import (
 
 from .log import logger
 from .models import TTSEncoding, TTSModels
-# from dotenv import load_dotenv
-# load_dotenv()
+from dotenv import load_dotenv
+load_dotenv()
 
 _Encoding = Literal["mp3", "pcm"]
 
@@ -65,9 +65,9 @@ class VoiceSettings:
 
 @dataclass
 class Voice:
-    id: str = "sample"
-    name: str = "sample"
-    category: str = "sample"
+    id: str
+    name: str
+    category: str
     settings: VoiceSettings | None = None
 
 
@@ -96,9 +96,10 @@ class TTS(tts.TTS):
     def __init__(
         self,
         *,
+        voice: Voice,
+        model: TTSModels | str = "sample_model",
         api_key: str | None = None,
         base_url: str | None = None,
-        voice: Voice | None = None,
         encoding: TTSEncoding = "mp3_22050_32",
         streaming_latency: int = 3,
         word_tokenizer: tokenize.WordTokenizer = tokenize.basic.WordTokenizer(
@@ -145,6 +146,7 @@ class TTS(tts.TTS):
             api_key = "1234567890"
 
         self._opts = _TTSOptions(
+            voice=voice,
             model=model,
             api_key=api_key,
             base_url=base_url or API_BASE_URL_V1,
@@ -182,7 +184,7 @@ class TTS(tts.TTS):
             model (TTSModels | str): TTS model to use. Defaults to "eleven_turbo_v2_5".
         """
         self._opts.model = model or self._opts.model
-        self._opts.voice = voice or self._opts.voice
+        
 
     def synthesize(self, text: str) -> "ChunkedStream":
         return ChunkedStream(self, text, self._opts, self._ensure_session())
