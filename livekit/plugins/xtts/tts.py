@@ -96,7 +96,6 @@ class TTS(tts.TTS):
     def __init__(
         self,
         *,
-        voice: Voice | None ,
         model: TTSModels | str = "sample_model",
         api_key: str | None = None,
         base_url: str | None = None,
@@ -183,7 +182,6 @@ class TTS(tts.TTS):
             model (TTSModels | str): TTS model to use. Defaults to "eleven_turbo_v2_5".
         """
         self._opts.model = model or self._opts.model
-        self._opts.voice = voice or self._opts.voice
 
     def synthesize(self, text: str) -> "ChunkedStream":
         return ChunkedStream(self, text, self._opts, self._ensure_session())
@@ -209,16 +207,7 @@ class ChunkedStream(tts.ChunkedStream):
             sample_rate=self._opts.sample_rate, num_channels=1
         )
 
-        voice_settings = (
-            _strip_nones(dataclasses.asdict(self._opts.voice.settings))
-            if self._opts.voice.settings
-            else None
-        )
-        data = {
-            "text": self._input_text,
-            "model_id": self._opts.model,
-            "voice_settings": voice_settings,
-        }
+       
 
         try:
             async with self._session.get(
