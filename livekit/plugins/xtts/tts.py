@@ -19,7 +19,7 @@ import base64
 import dataclasses
 import json
 import os
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from typing import Any, List, Literal
 
 import aiohttp
@@ -35,8 +35,8 @@ from livekit.agents import (
 
 from .log import logger
 from .models import TTSEncoding, TTSModels
-from dotenv import load_dotenv
-load_dotenv()
+# from dotenv import load_dotenv
+# load_dotenv()
 
 _Encoding = Literal["mp3", "pcm"]
 
@@ -88,7 +88,7 @@ class _TTSOptions:
     sample_rate: int 
     streaming_latency: int 
     word_tokenizer: tokenize.WordTokenizer
-    chunk_length_schedule: list[int] = [80, 120, 200, 260]
+    chunk_length_schedule: List[int] = field(default_factory=list)
     enable_ssml_parsing: bool = False
 
 
@@ -106,7 +106,7 @@ class TTS(tts.TTS):
             ignore_punctuation=False  # punctuation can help for intonation
         ),
         enable_ssml_parsing: bool = False,
-        chunk_length_schedule: list[int] = [80, 120, 200, 260],  # range is [50, 500]
+        chunk_length_schedule: List[int] = [80, 120, 200, 260],  # range is [50, 500]
         http_session: aiohttp.ClientSession | None = None,
         # deprecated
         model_id: TTSModels | str | None = None,
