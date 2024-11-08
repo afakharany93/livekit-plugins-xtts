@@ -13,7 +13,7 @@
 # limitations under the License.
 
 from .models import TTSEncoding, TTSModels
-from .tts import DEFAULT_VOICE, TTS, Voice, VoiceSettings
+from .tts import TTS, Voice, VoiceSettings
 from .version import __version__
 
 __all__ = [
@@ -22,7 +22,6 @@ __all__ = [
     "VoiceSettings",
     "TTSEncoding",
     "TTSModels",
-    "DEFAULT_VOICE",
     "__version__",
 ]
 
@@ -31,12 +30,12 @@ from livekit.agents import Plugin
 from .log import logger
 
 
-class ElevenLabsPlugin(Plugin):
+class XTTSPlugin(Plugin):
     def __init__(self):
         super().__init__(__name__, __version__, __package__, logger)
 
 
-Plugin.register_plugin(ElevenLabsPlugin())
+Plugin.register_plugin(XTTSPlugin())
 
 # Cleanup docs of unexported modules
 _module = dir()
