@@ -19,7 +19,7 @@ import base64
 import dataclasses
 import json
 import os
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 from typing import Any, List, Literal
 
 import aiohttp
@@ -65,9 +65,9 @@ class VoiceSettings:
 
 @dataclass
 class Voice:
-    id: str
-    name: str
-    category: str
+    id: str = "sample"
+    name: str = "sample"
+    category: str = "sample"
     settings: VoiceSettings | None = None
 
 
@@ -88,7 +88,7 @@ class _TTSOptions:
     sample_rate: int 
     streaming_latency: int 
     word_tokenizer: tokenize.WordTokenizer
-    chunk_length_schedule: List[int] = field(default_factory=list)
+    chunk_length_schedule: list[int] = [80, 120, 200, 260]
     enable_ssml_parsing: bool = False
 
 
@@ -96,16 +96,16 @@ class TTS(tts.TTS):
     def __init__(
         self,
         *,
-        model: TTSModels | str = "sample_model",
         api_key: str | None = None,
         base_url: str | None = None,
+        voice: Voice | None = None,
         encoding: TTSEncoding = "mp3_22050_32",
         streaming_latency: int = 3,
         word_tokenizer: tokenize.WordTokenizer = tokenize.basic.WordTokenizer(
             ignore_punctuation=False  # punctuation can help for intonation
         ),
         enable_ssml_parsing: bool = False,
-        chunk_length_schedule: List[int] = [80, 120, 200, 260],  # range is [50, 500]
+        chunk_length_schedule: list[int] = [80, 120, 200, 260],  # range is [50, 500]
         http_session: aiohttp.ClientSession | None = None,
         # deprecated
         model_id: TTSModels | str | None = None,
@@ -182,6 +182,7 @@ class TTS(tts.TTS):
             model (TTSModels | str): TTS model to use. Defaults to "eleven_turbo_v2_5".
         """
         self._opts.model = model or self._opts.model
+        self._opts.voice = voice or self._opts.voice
 
     def synthesize(self, text: str) -> "ChunkedStream":
         return ChunkedStream(self, text, self._opts, self._ensure_session())
@@ -207,7 +208,16 @@ class ChunkedStream(tts.ChunkedStream):
             sample_rate=self._opts.sample_rate, num_channels=1
         )
 
-       
+        voice_settings = (
+            _strip_nones(dataclasses.asdict(self._opts.voice.settings))
+            if self._opts.voice.settings
+            else None
+        )
+        data = {
+            "text": self._input_text,
+            "model_id": self._opts.model,
+            "voice_settings": voice_settings,
+        }
 
         try:
             async with self._session.get(
