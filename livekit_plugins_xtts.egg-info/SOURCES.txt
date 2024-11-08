@@ -1,0 +1,13 @@
+README.md
+pyproject.toml
+setup.py
+livekit/plugins/xtts/__init__.py
+livekit/plugins/xtts/log.py
+livekit/plugins/xtts/models.py
+livekit/plugins/xtts/py.typed
+livekit/plugins/xtts/tts.py
+livekit/plugins/xtts/version.py
+livekit_plugins_xtts.egg-info/PKG-INFO
+livekit_plugins_xtts.egg-info/SOURCES.txt
+livekit_plugins_xtts.egg-info/dependency_links.txt
+livekit_plugins_xtts.egg-info/top_level.txt
