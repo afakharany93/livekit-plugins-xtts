@@ -1,6 +1,6 @@
 [project]
 name = "livekit-plugins-xtts"
-version = "0.1.6"
+version = "0.1.7"
 description = "XTTS plugin for LiveKit"
 authors = [
     {name = "Anish Menon", email = "anishmenon82@gmail.com"}
