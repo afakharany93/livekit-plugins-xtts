@@ -212,6 +212,10 @@ class ChunkedStream(tts.ChunkedStream):
             self._mp3_decoder = utils.codecs.Mp3StreamDecoder()
 
     async def _main_task(self) -> None:
+        # Skip TTS if input text is empty or only whitespace
+        if not self._input_text or self._input_text.isspace() or "empty" in self._input_text.lower():
+            return
+
         request_id = utils.shortuuid()
         bstream = utils.audio.AudioByteStream(
             sample_rate=self._opts.sample_rate, num_channels=1
@@ -232,7 +236,6 @@ class ChunkedStream(tts.ChunkedStream):
             async with self._session.get(
                 _synthesize_url(self._opts, self._input_text),
                 headers={AUTHORIZATION_HEADER: self._opts.api_key},
-                # json=data,
             ) as resp:
                 # if not resp.content_type.startswith("audio/"):
                 #     content = await resp.text()
