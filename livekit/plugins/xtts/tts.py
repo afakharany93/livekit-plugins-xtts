@@ -41,6 +41,15 @@ from .models import TTSEncoding, TTSModels
 _Encoding = Literal["mp3", "pcm"]
 
 
+word_tokenizer_without_punctuation: tokenize.WordTokenizer = (
+    tokenize.basic.WordTokenizer(ignore_punctuation=True)
+)
+
+
+trigger_phrase = os.environ.get("XTTS_TRIGGER_PHRASE", "Hi Agent")
+trigger_phrase_words = word_tokenizer_without_punctuation.tokenize(text=trigger_phrase)
+
+
 def _sample_rate_from_format(output_format: TTSEncoding) -> int:
     split = output_format.split("_")  # e.g: mp3_22050_32
     return int(split[1])
@@ -102,9 +111,7 @@ class TTS(tts.TTS):
         base_url: str | None = None,
         encoding: TTSEncoding = "mp3_22050_32",
         streaming_latency: int = 3,
-        word_tokenizer: tokenize.WordTokenizer = tokenize.basic.WordTokenizer(
-            ignore_punctuation=False  # punctuation can help for intonation
-        ),
+        word_tokenizer: tokenize.WordTokenizer = trigger_phrase_words,
         enable_ssml_parsing: bool = False,
         chunk_length_schedule: List[int] = [80, 120, 200, 260],  # range is [50, 500]
         http_session: aiohttp.ClientSession | None = None,
