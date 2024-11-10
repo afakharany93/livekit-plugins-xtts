@@ -1,6 +1,6 @@
 Metadata-Version: 2.1
 Name: livekit-plugins-xtts
-Version: 0.1.8
+Version: 0.1.9
 Summary: XTTS plugin for LiveKit
 Home-page: https://github.com/livekit/agents
 Author-email: Anish Menon <anishmenon82@gmail.com>

@@ -212,8 +212,11 @@ class ChunkedStream(tts.ChunkedStream):
             self._mp3_decoder = utils.codecs.Mp3StreamDecoder()
 
     async def _main_task(self) -> None:
-        # Skip TTS if input text is empty or only whitespace
-        if not self._input_text or self._input_text.isspace() or "empty" in self._input_text.lower() or "string" in self._input_text.lower():
+        # Skip TTS if input text is empty, whitespace, or any form of empty string representation
+        if (not self._input_text or 
+            self._input_text.isspace() or 
+            self._input_text.strip() in ['""', "''", ''] or
+            self._input_text.strip() == '""'):
             return
 
         request_id = utils.shortuuid()
