@@ -213,7 +213,7 @@ class ChunkedStream(tts.ChunkedStream):
 
     async def _main_task(self) -> None:
         # Skip TTS if input text is empty or only whitespace
-        if not self._input_text or self._input_text.isspace() or "empty" in self._input_text.lower():
+        if not self._input_text or self._input_text.isspace() or "empty" in self._input_text.lower() or "string" in self._input_text.lower():
             return
 
         request_id = utils.shortuuid()

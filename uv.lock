@@ -3,5 +3,5 @@ requires-python = ">=3.9"
 
 [[package]]
 name = "livekit-plugins-xtts"
-version = "0.1.7"
+version = "0.1.8"
 source = { editable = "." }
