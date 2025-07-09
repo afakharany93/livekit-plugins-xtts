@@ -31,6 +31,13 @@ from livekit.agents import (
     tokenize,
     tts,
     utils,
+    APIConnectOptions,
+)
+
+from livekit.agents.types import (
+    DEFAULT_API_CONNECT_OPTIONS,
+    NOT_GIVEN,
+    NotGivenOr,
 )
 
 from .log import logger
@@ -204,9 +211,10 @@ class ChunkedStream(tts.ChunkedStream):
     """Synthesize using the chunked api endpoint"""
 
     def __init__(
-        self, tts: TTS, text: str, opts: _TTSOptions, session: aiohttp.ClientSession
+        self, tts: TTS, input_text: str, opts: _TTSOptions, session: aiohttp.ClientSession
     ) -> None:
-        super().__init__(tts, text)
+        conn_options: APIConnectOptions = DEFAULT_API_CONNECT_OPTIONS
+        super().__init__(tts=tts, input_text=input_text, conn_options=conn_options)
         self._opts, self._session = opts, session
         if _encoding_from_format(self._opts.encoding) == "mp3":
             self._mp3_decoder = utils.codecs.Mp3StreamDecoder()
