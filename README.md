@@ -1,4 +1,4 @@
-# LiveKit Plugins XTTS by Anish Menon
+# The original LiveKit Plugins XTTS was by Anish Menon. I just edited it to work with version 1.1.3 of livekit agents 
 
 ## Pre-requisites
 
@@ -20,7 +20,7 @@ https://github.com/daswer123/xtts-api-server
 ### Step 2: Install the LiveKit Plugin
 
 ```bash
-pip install git+https://github.com/anishmenon/livekit-plugins-xtts.git
+pip install git+https://github.com/afakharany93/livekit-plugins-xtts.git
 
 ```
 
