@@ -193,7 +193,7 @@ class TTS(tts.TTS):
         self._opts.model = model or self._opts.model
         
 
-    def synthesize(self, text: str) -> "ChunkedStream":
+    def synthesize(self, text: str, opts) -> "ChunkedStream":
         return ChunkedStream(self, text, self._opts, self._ensure_session())
 
     # def stream(self) -> "SynthesizeStream":
