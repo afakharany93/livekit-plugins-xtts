@@ -382,7 +382,7 @@ class ChunkedStream(tts.ChunkedStream):
                 output_emitter.initialize(
                     request_id=request_id,
                     sample_rate=self._opts.sample_rate,
-                    num_channels=self._opts.num_channels,
+                    num_channels=1,
                     mime_type=f"audio/{self._opts.response_format}",
                 )
 
