@@ -315,8 +315,8 @@ class ChunkedStream(tts.ChunkedStream):
         # Calls the constructor of the parent class (tts.ChunkedStream) with the provided arguments.
         self._opts, self._session = opts, session
         # Stores the TTS options and the aiohttp client session as private attributes.
-        if _encoding_from_format(self._opts.encoding) == "mp3":
-            self._mp3_decoder = utils.codecs.Mp3StreamDecoder()
+        # if _encoding_from_format(self._opts.encoding) == "mp3":
+        #     self._mp3_decoder = utils.codecs.Mp3StreamDecoder()
         # If the specified encoding is MP3, initializes an MP3 stream decoder.
 
     async def _run(self, output_emitter) -> None:
