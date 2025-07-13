@@ -361,6 +361,7 @@ class ChunkedStream(tts.ChunkedStream):
                 #     return
 
                 print("resp.content", resp.content)
+                
                 # Prints the raw content of the API response (likely for debugging).  This should probably be removed or changed to a log.debug statement in production.
                 # async for bytes_data, _ in resp.content.iter_chunks():
                 #     for frame in bstream.write(bytes_data):
@@ -383,7 +384,7 @@ class ChunkedStream(tts.ChunkedStream):
                     request_id=request_id,
                     sample_rate=self._opts.sample_rate,
                     num_channels=1,
-                    mime_type=f"audio/mp3",
+                    mime_type=f"audio/{_encoding_from_format(self._opts.encoding)}",
                 )
 
                 async for data, _ in resp.content.iter_chunks():
