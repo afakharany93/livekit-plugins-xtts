@@ -360,37 +360,36 @@ class ChunkedStream(tts.ChunkedStream):
                 #     logger.error("11labs returned non-audio data: %s", content)
                 #     return
 
-                # encoding = _encoding_from_format(self._opts.encoding)
-                # if encoding == "mp3":
-                #     async for bytes_data, _ in resp.content.iter_chunks():
-                #         for frame in self._mp3_decoder.decode_chunk(bytes_data):
-                #             for frame in bstream.write(frame.data.tobytes()):
-                #                 self._event_ch.send_nowait(
-                #                     tts.SynthesizedAudio(
-                #                         request_id=request_id,
-                #                         frame=frame,
-                #                     )
-                #                 )
-                # else:
                 print("resp.content", resp.content)
                 # Prints the raw content of the API response (likely for debugging).  This should probably be removed or changed to a log.debug statement in production.
-                async for bytes_data, _ in resp.content.iter_chunks():
-                    for frame in bstream.write(bytes_data):
-                        self._event_ch.send_nowait(
-                            tts.SynthesizedAudio(
-                                request_id=request_id,
-                                segment_id=request_id,
-                                frame=frame,
-                            )
-                        )
-                # Iterates through chunks of data received from the API, writes the data to the audio byte stream, and emits synthesized audio events.
-                # Each event contains the request ID, a segment ID (currently the same as the request ID), and an audio frame.
+                # async for bytes_data, _ in resp.content.iter_chunks():
+                #     for frame in bstream.write(bytes_data):
+                #         self._event_ch.send_nowait(
+                #             tts.SynthesizedAudio(
+                #                 request_id=request_id,
+                #                 segment_id=request_id,
+                #                 frame=frame,
+                #             )
+                #         )
+                # # Iterates through chunks of data received from the API, writes the data to the audio byte stream, and emits synthesized audio events.
+                # # Each event contains the request ID, a segment ID (currently the same as the request ID), and an audio frame.
 
-                for frame in bstream.flush():
-                    self._event_ch.send_nowait(
-                        tts.SynthesizedAudio(request_id=request_id, frame=frame)
-                    )
+                # for frame in bstream.flush():
+                #     self._event_ch.send_nowait(
+                #         tts.SynthesizedAudio(request_id=request_id, frame=frame)
+                #     )
                 # After processing all chunks, flushes the audio byte stream to ensure all buffered data is emitted as synthesized audio events.
+                output_emitter.initialize(
+                    request_id=request_id,
+                    sample_rate=self._opts.sample_rate,
+                    num_channels=self._opts.num_channels,
+                    mime_type=f"audio/{self._opts.response_format}",
+                )
+
+                async for data, _ in resp.content.iter_chunks():
+                    output_emitter.push(data)
+
+                output_emitter.flush()
 
         except asyncio.TimeoutError as e:
             raise APITimeoutError() from e
