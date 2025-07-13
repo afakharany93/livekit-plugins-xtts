@@ -383,7 +383,7 @@ class ChunkedStream(tts.ChunkedStream):
                     request_id=request_id,
                     sample_rate=self._opts.sample_rate,
                     num_channels=1,
-                    mime_type=f"audio/{self._opts.response_format}",
+                    mime_type=f"audio/mp3",
                 )
 
                 async for data, _ in resp.content.iter_chunks():
