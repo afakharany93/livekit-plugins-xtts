@@ -51,6 +51,7 @@ from livekit.agents import (
     tts,
     utils,
     APIConnectOptions,
+    APIError,
 )
 
 # Imports specific types and default configurations for API connections from the 'livekit.agents.types' module.
@@ -359,6 +360,9 @@ class ChunkedStream(tts.ChunkedStream):
                 #     content = await resp.text()
                 #     logger.error("11labs returned non-audio data: %s", content)
                 #     return
+                if not resp.content_type.startswith("audio"):
+                    content = await resp.text()
+                    raise APIError(message="xtts returned non-audio data", body=content)
 
                 print("resp.content", resp.content)
                 
