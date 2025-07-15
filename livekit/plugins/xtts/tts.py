@@ -365,6 +365,7 @@ class ChunkedStream(tts.ChunkedStream):
                     raise APIError(message="xtts returned non-audio data", body=content)
 
                 print("resp.content", resp.content)
+                print("dit(resp.content)", dir(resp.content))
                 
                 # Prints the raw content of the API response (likely for debugging).  This should probably be removed or changed to a log.debug statement in production.
                 # async for bytes_data, _ in resp.content.iter_chunks():
@@ -392,6 +393,7 @@ class ChunkedStream(tts.ChunkedStream):
                 )
 
                 async for data, _ in resp.content.iter_chunks():
+                    print("data: ",data)
                     output_emitter.push(data)
 
                 output_emitter.flush()
