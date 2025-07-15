@@ -351,6 +351,7 @@ class ChunkedStream(tts.ChunkedStream):
         # Constructs a dictionary containing the input text, model ID, and voice settings to be sent to the API.
 
         try:
+            print("the url is: ",_synthesize_url(self._opts, self._input_text))
             async with self._session.get(
                 _synthesize_url(self._opts, self._input_text),
                 headers={AUTHORIZATION_HEADER: self._opts.api_key},
@@ -364,8 +365,8 @@ class ChunkedStream(tts.ChunkedStream):
                     content = await resp.text()
                     raise APIError(message="xtts returned non-audio data", body=content)
 
-                print("resp.content", resp.content)
-                print("dit(resp.content)", dir(resp.content))
+                # print("resp.content", resp.content)
+                print("dir(resp.content)", dir(resp.content))
                 
                 # Prints the raw content of the API response (likely for debugging).  This should probably be removed or changed to a log.debug statement in production.
                 # async for bytes_data, _ in resp.content.iter_chunks():
